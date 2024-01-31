@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .breakpoint-container {
+    @apply border-x-2 text-center relative mx-auto border-white/50;
+  }
+  .breakpoint-line {
+    @apply absolute w-full h-[1px] border-t-2 border-dashed border-white/50 left-0 top-1/2;
+  }
+  .breakpoint-label {
+    @apply bg-slate-950 relative px-4;
+  }
+}
