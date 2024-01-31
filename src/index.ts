@@ -96,15 +96,15 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
     matchUtilities(
       {
         [`${prefix}-screen-min`]: (value) => {
-          const clampedUnit = unitToRem(value);
+          const parsedUnit = parseScreenSize(value);
           return {
-            [`--${varsPrefix}-screen-min`]: clampedUnit,
+            [`--${varsPrefix}-screen-min`]: parsedUnit,
           };
         },
         [`${prefix}-screen-max`]: (value) => {
-          const clampedUnit = unitToRem(value);
+          const parsedUnit = parseScreenSize(value);
           return {
-            [`--${varsPrefix}-screen-max`]: clampedUnit,
+            [`--${varsPrefix}-screen-max`]: parsedUnit,
           };
         },
       },
@@ -118,8 +118,24 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
 
 /** Utils */
 
-// TODO TERMINAR ESTO
-const parseScreenSize = 
+const getScreenSizeAsNumber = (value: string): number | null => {
+  if (value.includes('px')) {
+    return parseInt(value.replace('px', ''));
+  } else if (typeof value === 'number') {
+    return value;
+  }
+  return null;
+}
+
+const parseScreenSize = (value: string): string => {
+  const v = getScreenSizeAsNumber(value);
+
+  if (typeof v === 'number' && !isNaN(v)) {
+    return v.toString();
+  } else {
+    return `Invalid screen size ${value}`;
+  }
+}
 
 const clampUnitReplace = (value: unknown): number | null => {
 
