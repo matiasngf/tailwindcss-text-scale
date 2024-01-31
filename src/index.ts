@@ -1,6 +1,6 @@
 import plugin from 'tailwindcss/plugin'
 
-interface TextScalePluginOptions {
+export interface TextScalePluginOptions {
   /** Custom minimum screen width */
   minScreen?: number;
   /** Custom maximum screen width */
@@ -15,7 +15,7 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
   ({
     minScreen: minScreenOption,
     maxScreen: maxScreenOption,
-    prefix = 'text-scale',
+    prefix = 'text',
     varsPrefix = 'text-scale',
   } = {}) => ({ addBase, matchUtilities, theme }) => {
 
@@ -35,12 +35,16 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
     });
 
 
-    const baseMatcher = `[class*="${prefix}-min"][class*="${prefix}-max]`
+    const baseMatcher = `[class*="${prefix}-min"][class*="${prefix}-max"]`
+
+    const screenMatcher = `:root, [class*="${prefix}-screen-min"], [class*="${prefix}-screen-max"]`
 
     addBase({
       ":root": {
         [`--${varsPrefix}-screen-max`]: maxScreen.toString(),
         [`--${varsPrefix}-screen-min`]: minScreen.toString(),
+      },
+      [screenMatcher]: {
         [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
         [`--${varsPrefix}-screen-difference`]: `calc(
           var(--${varsPrefix}-screen-max) - var(--${varsPrefix}-screen-min)
@@ -49,7 +53,6 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
         [`--${varsPrefix}-percentage`]: `calc(
           var(--${varsPrefix}-offset) / var(--${varsPrefix}-screen-difference) * 16
         )`,
-
       },
       [baseMatcher]: {
         [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,
@@ -68,6 +71,7 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
     })
 
     const fontSizes = theme('fontSize');
+    const screens = theme('screens');
 
     matchUtilities(
       {
@@ -89,10 +93,33 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
       }
     )
 
+    matchUtilities(
+      {
+        [`${prefix}-screen-min`]: (value) => {
+          const clampedUnit = unitToRem(value);
+          return {
+            [`--${varsPrefix}-screen-min`]: clampedUnit,
+          };
+        },
+        [`${prefix}-screen-max`]: (value) => {
+          const clampedUnit = unitToRem(value);
+          return {
+            [`--${varsPrefix}-screen-max`]: clampedUnit,
+          };
+        },
+      },
+      {
+        values: screens,
+      }
+    )
+
   }
 )
 
 /** Utils */
+
+// TODO TERMINAR ESTO
+const parseScreenSize = 
 
 const clampUnitReplace = (value: unknown): number | null => {
 
@@ -118,9 +145,9 @@ const clampUnitReplace = (value: unknown): number | null => {
 };
 
 // Add value in px as comment for reference
-const addUnitCommentInPx = value => `${value} /* ${value * 16}px */`;
+const addUnitCommentInPx = (value: number) => `${value} /* ${value * 16}px */`;
 
-const addErrorComment = (value, error) => `${value} /* ${error} */`;
+const addErrorComment = (value: string, error: unknown) => `${value} /* ${error} */`;
 
 const unitToRem = (value: unknown): string => {
   const replacedValue = clampUnitReplace(value);
