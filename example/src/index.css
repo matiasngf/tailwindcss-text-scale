@@ -2,7 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .text-outline {
+    color: theme('colors.black');
+    text-shadow:
+      3px 3px 0 theme('colors.white'),
+      -3px 3px 0 theme('colors.white'),
+      -3px -3px 0 theme('colors.white'),
+      3px -3px 0 theme('colors.white');
+  }
+}
+
 @layer components {
+
+  .markup {
+    @apply bg-slate-800 text-lime-600 rounded-[0.2em] p-[0.1em] font-mono whitespace-nowrap;
+  }
+
   .breakpoint-container {
     @apply border-x-2 text-center relative mx-auto border-white/50;
   }
@@ -10,6 +26,6 @@
     @apply absolute w-full h-[1px] border-t-2 border-dashed border-white/50 left-0 top-1/2;
   }
   .breakpoint-label {
-    @apply bg-slate-950 relative px-4;
+    @apply bg-black relative px-4;
   }
 }
