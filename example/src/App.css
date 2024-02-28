@@ -1,0 +1,18 @@
+.example-container {
+  @apply space-y-12;
+}
+
+details>summary {
+ 
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none
+}
+
+summary::before {
+  content: ' ►';
+}
+details[open] summary:before {
+  content: " ▼";
+}

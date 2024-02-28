@@ -1,57 +1,74 @@
 import './App.css'
+import { CodeBlock } from './code-block'
 
 function App() {
   return (
     <div className="w-full min-h-screen py-40 space-y-40 text-center text-white bg-black">
-      <div className="mx-auto space-y-4 max-w-screen-2xl">
-        <h1 className="font-bold text-center py-[0.5em] text-min-2xl text-max-6xl font-mono">
+      <div className="space-y-8">
+        <h1 className="font-mono font-bold leading-none text-center text-min-2xl text-max-6xl">
           npm i tailwindcss-text-scale
         </h1>
-        <div className="breakpoint-container">
+        <div className="px-4 space-y-4 text-min-sm text-max-xl">
+          <p className="font-bold text-[1.5em]">Get better control of your font sizes.</p>
+          <p>Resize your screen to see it in action.</p>
+        </div>
+        <div className="breakpoint-container max-w-screen-2xl">
           <span className="breakpoint-line" />
-          <span className="breakpoint-label">Max: screen-2xl = text-6xl</span>
+          <span className="breakpoint-label">Max breakpoint</span>
         </div>
 
         <div className="max-w-screen-sm breakpoint-container">
           <span className="breakpoint-line" />
-          <span className="breakpoint-label">Min: screen-sm = text-2xl</span>
+          <span className="breakpoint-label">Min breakpoint</span>
         </div>
       </div>
 
       {/* Custom sizes */}
-      <div className="mx-auto space-y-4 max-w-screen-2xl">
-        <h2 className="font-bold text-center py-[0.5em] text-min-lg text-max-4xl">
-          Define the text size using <span className="markup">{'text-min-<size>'}</span> and{' '}
-          <span className="markup">{'text-max-<size>'}</span>
-        </h2>
-        <div className="breakpoint-container">
-          <span className="breakpoint-line" />
-          <span className="breakpoint-label">Max: screen-2xl = text-4xl</span>
-        </div>
+      <div className="example-container">
+        <div className="mx-auto space-y-4 max-w-screen-2xl">
+          <h2 className="font-bold text-center py-[0.5em] text-min-lg text-max-4xl">
+            Define the text size using <span className="markup">{'text-min-<size>'}</span> and{' '}
+            <span className="markup">{'text-max-<size>'}</span>
+          </h2>
+          <div className="breakpoint-container">
+            <span className="breakpoint-line" />
+            <span className="breakpoint-label">screen-2xl = text-4xl</span>
+          </div>
 
-        <div className="max-w-screen-sm breakpoint-container">
-          <span className="w-screen-sm breakpoint-line" />
-          <span className="breakpoint-label">Min: screen-sm = text-xl</span>
+          <div className="max-w-screen-sm breakpoint-container">
+            <span className="w-screen-sm breakpoint-line" />
+            <span className="breakpoint-label">screen-sm = text-xl</span>
+          </div>
         </div>
+        <CodeBlock>{`<h2 className="text-min-lg text-max-4xl">Text</h2>`}</CodeBlock>
       </div>
 
       {/* Cusotom breakpoint */}
-      <div className="max-w-screen-lg mx-auto space-y-4">
-        <div className="text-screen-min-[300px] text-screen-max-lg">
-          <h2 className="font-bold text-center py-[0.5em] text-min-xs text-max-[40px]">
-            Change default breakpoints using{' '}
-            <span className="markup">{'text-screen-min-<breakpoint>'}</span> and{' '}
-            <span className="markup">{'text-screen-max-<breakpoint>'}</span>
-          </h2>
+      <div className="example-container">
+        <div className="max-w-screen-lg mx-auto space-y-4">
+          <div className="text-screen-min-[300px] text-screen-max-lg">
+            <h2 className="font-bold text-center py-[0.5em] text-min-xs text-max-[40px]">
+              Change default breakpoints using{' '}
+              <span className="markup">{'text-screen-min-<breakpoint>'}</span> and{' '}
+              <span className="markup">{'text-screen-max-<breakpoint>'}</span>
+            </h2>
+          </div>
+          <div className="max-w-screen-lg breakpoint-container">
+            <span className="breakpoint-line" />
+            <span className="breakpoint-label">screen-lg = text-[40px]</span>
+          </div>
+          <div className="max-w-[300px] breakpoint-container">
+            <span className="breakpoint-line" />
+            <span className="breakpoint-label">screen-[300px] = text-xs</span>
+          </div>
         </div>
-        <div className="max-w-screen-lg breakpoint-container">
-          <span className="breakpoint-line" />
-          <span className="breakpoint-label">Max: screen-lg = text-[40px]</span>
-        </div>
-        <div className="max-w-[300px] breakpoint-container">
-          <span className="breakpoint-line" />
-          <span className="breakpoint-label">Min: screen-[300px] = text-xs</span>
-        </div>
+        <CodeBlock
+          summary={`<div className="text-screen-min-[300px] text-screen-max-lg">`}
+        >{`<div className="text-screen-min-[300px] text-screen-max-lg">
+  <h2 className="text-min-xs text-max-[40px]">
+    Text
+  </h2>
+</div>`}</CodeBlock>
       </div>
 
       {/* github */}
@@ -63,14 +80,6 @@ function App() {
           className="block text-blue-500 hover:underline"
         >
           <div>Full docs</div>
-        </a>
-        <a
-          href="https://github.com/matiasngf/tailwindcss-text-scale"
-          target="_blank"
-          rel="noreferrer"
-          className="block text-blue-500 hover:underline"
-        >
-          <div>Source code</div>
         </a>
       </div>
     </div>
