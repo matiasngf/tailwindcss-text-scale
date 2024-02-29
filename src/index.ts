@@ -26,11 +26,18 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
       if (screen && typeof screen === 'string' && screen.includes('px')) {
         return parseInt(screen.replace('px', ''))
       } else {
-        throw new Error(
-          `tailwindcss-text-scale error: ` +
-          `${i === 0 ? 'screens.sm' : 'screens.2xl'} should be in pixels ` +
-          `or you need to provide a custom value for ${i === 0 ? 'minScreen' : 'maxScreen'}`
-        )
+        const valueToSet = i === 0 ? 'screens.sm' : 'screens.2xl';
+        const optionToSet = i === 0 ? 'minScreen' : 'maxScreen';
+
+        const errorMessage = `
+tailwindcss-text-scale error:
+You don't have  a value for ${valueToSet} in your tailwind theme.
+Add one or edit your plugin config:
+  textScalePlugin({
+    ${optionToSet}: number
+  })
+`
+        throw new Error(errorMessage);
       }
     });
 

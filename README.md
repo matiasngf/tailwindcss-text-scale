@@ -29,10 +29,15 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   plugins: [
-    textScalePlugin()
+    textScalePlugin({
+      minScreen: 320, // optional, defaults to theme.screens.sm
+      maxScreen: 1920, // optional, defaults to theme.screens.2xl
+    })
   ],
 }
 ```
+
+> If you dont have a screens.sm or screens.2xl on your theme, you need to set the options `minScreen` and `maxScreen`.
 
 ## Scaling text
 
