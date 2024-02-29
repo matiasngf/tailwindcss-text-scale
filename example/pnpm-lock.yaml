@@ -52,6 +52,9 @@ devDependencies:
   tailwindcss:
     specifier: ^3.4.1
     version: 3.4.1
+  tailwindcss-text-scale:
+    specifier: ^0.1.1
+    version: 0.1.1(tailwindcss@3.4.1)
   typescript:
     specifier: ^5.2.2
     version: 5.3.3
@@ -2355,6 +2358,14 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+    dev: true
+
+  /tailwindcss-text-scale@0.1.1(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-pBk1bdhtVH/I9B2130aIJxilvWHbjQ4ID2L1ECKTQuft4tJWoQKwQUiaBoKsE14KYbSFS1IZcsjzPWiPPEWpQQ==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0'
+    dependencies:
+      tailwindcss: 3.4.1
     dev: true
 
   /tailwindcss@3.4.1:

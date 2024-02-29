@@ -1,4 +1,4 @@
-import textScalePlugin from '../dist'
+import textScalePlugin from 'tailwindcss-text-scale'
 
 /** @type {import('tailwindcss').Config} */
 export default {
