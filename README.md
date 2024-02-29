@@ -30,8 +30,6 @@ export default {
     textScalePlugin()
   ],
 }
-
-
 ```
 
 ## Scaling text
@@ -81,10 +79,9 @@ textScalePlugin({
 
 ### Custom classNames
 
-If you don't like using `text-min-[size]`, you can customize the variable name on the plugin configuration:
+If you don't like using `text-min-[size]`, you can customize the variable name on the plugin configuration. For example, if you want your classes to be `scale-text-min-[size]` and `scale-text-max-[size]`, you can set:
 
 ```tsx
-
 textScalePlugin({
   prefix: 'scale-text',
 })
@@ -92,10 +89,15 @@ textScalePlugin({
 
 Now, to scale your text, use:
 ```html
+<h2 className="scale-text-min-xs scale-text-max-lg">
+  Scaled!
+</h2>
+```
 
+And to customize breakpoints
+
+```html
 <div className="scale-text-screen-min-sm scale-text-screen-max-xl">
-  <h2 className="scale-text-min-xs scale-text-max-lg">
-    Scaled!
-  </h2>
+  {...content}
 </div>
 ```
