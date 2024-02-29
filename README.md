@@ -1,14 +1,16 @@
 <img src="https://raw.githubusercontent.com/matiasngf/tailwindcss-text-scale/main/text-scale-logo.png"/>
 
-Scale your text between two breakpoints to create a better responsive design.
+Scale your text between breakpoints to create a better responsive experience.
 
 ```html
 <h2 className="text-min-lg text-max-4xl">
-  Scaled!
+  This text will scale between lg on mobile and 4xl on desktop.
 </h2>
 ```
 
-This text will scale between `lg` on mobile and `4xl` on desktop.
+<a href="https://tailwindcss-text-scale.vercel.app/" target="_blank">Demo</a> | 
+<a href="https://www.npmjs.com/package/tailwindcss-text-scale" target="_blank">NPM</a> |
+<a href="https://github.com/matiasngf/tailwindcss-text-scale" target="_blank">GitHub</a>
 
 ## Installation
 
@@ -38,7 +40,7 @@ export default {
 
 ```html
 <h2 className="text-min-lg text-max-4xl">
-  Text
+  Scaled text
 </h2>
 ```
 
@@ -46,7 +48,7 @@ You can use any font-size you want:
 
 ```html
 <h2 className="text-min-[13px] text-max-[20px]">
-  Text
+  Scaled text
 </h2>
 ```
 
@@ -79,7 +81,7 @@ textScalePlugin({
 
 ### Custom classNames
 
-If you don't like using `text-min-[size]`, you can customize the variable name on the plugin configuration. For example, if you want your classes to be `scale-text-min-[size]` and `scale-text-max-[size]`, you can set:
+If you don't like using `text-min-[size]`, you can customize the variable name on the plugin configuration. For example, if you want your classes to be `scale-text-min-[size]`, you can set:
 
 ```tsx
 textScalePlugin({
@@ -88,13 +90,14 @@ textScalePlugin({
 ```
 
 Now, to scale your text, use:
+
 ```html
 <h2 className="scale-text-min-xs scale-text-max-lg">
   Scaled!
 </h2>
 ```
 
-And to customize breakpoints
+And to customize breakpoints:
 
 ```html
 <div className="scale-text-screen-min-sm scale-text-screen-max-xl">
