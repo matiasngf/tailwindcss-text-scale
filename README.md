@@ -3,7 +3,7 @@
 Scale your text between breakpoints to create a better responsive experience.
 
 ```html
-<h2 className="text-min-lg text-max-4xl">
+<h2 className="text-scale-lg/4xl">
   This text will scale between lg on mobile and 4xl on desktop.
 </h2>
 ```
