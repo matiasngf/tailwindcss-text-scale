@@ -5,10 +5,10 @@ function App() {
   return (
     <div className="w-full min-h-screen py-40 space-y-40 text-center text-white bg-black">
       <div className="space-y-8">
-        <h1 className="font-mono font-bold leading-none text-center text-min-2xl text-max-6xl">
+        <h1 className="font-mono font-bold leading-none text-center text-scale-2xl/6xl">
           npm i tailwindcss-text-scale
         </h1>
-        <div className="px-4 space-y-4 text-min-sm text-max-xl">
+        <div className="px-4 space-y-4 text-scale-sm/xl">
           <p className="font-bold text-[1.5em]">Get better control of your font sizes.</p>
           <p>Resize your screen to see it in action.</p>
         </div>
@@ -26,9 +26,9 @@ function App() {
       {/* Custom sizes */}
       <div className="example-container">
         <div className="mx-auto space-y-4 max-w-screen-2xl">
-          <h2 className="font-bold text-center py-[0.5em] text-min-lg text-max-4xl">
-            Define the text size using <span className="markup">{'text-min-<size>'}</span> and{' '}
-            <span className="markup">{'text-max-<size>'}</span>
+          <h2 className="font-bold text-center py-[0.5em] text-scale-lg/4xl">
+            Define the text size using{' '}
+            <span className="markup">{'text-scale-<minSize>/<maxSize>'}</span>.
           </h2>
           <div className="breakpoint-container">
             <span className="breakpoint-line" />
@@ -40,17 +40,16 @@ function App() {
             <span className="breakpoint-label">screen-sm = text-xl</span>
           </div>
         </div>
-        <CodeBlock>{`<h2 className="text-min-lg text-max-4xl">Text</h2>`}</CodeBlock>
+        <CodeBlock>{`<h2 className="text-scale-lg/4xl">Text</h2>`}</CodeBlock>
       </div>
 
       {/* Cusotom breakpoint */}
       <div className="example-container">
         <div className="max-w-screen-lg mx-auto space-y-4">
-          <div className="text-screen-min-[300px] text-screen-max-lg">
-            <h2 className="font-bold text-center py-[0.5em] text-min-xs text-max-[40px]">
+          <div className="text-screen-[300px]/lg">
+            <h2 className="font-bold text-center py-[0.5em] text-scale-xs/[40px]">
               Change default breakpoints using{' '}
-              <span className="markup">{'text-screen-min-<breakpoint>'}</span> and{' '}
-              <span className="markup">{'text-screen-max-<breakpoint>'}</span>
+              <span className="markup">{'text-screen-<minBreakpoint>/<maxBreakpoint>'}</span>
             </h2>
           </div>
           <div className="max-w-screen-lg breakpoint-container">
@@ -63,9 +62,9 @@ function App() {
           </div>
         </div>
         <CodeBlock
-          summary={`<div className="text-screen-min-[300px] text-screen-max-lg">`}
-        >{`<div className="text-screen-min-[300px] text-screen-max-lg">
-  <h2 className="text-min-xs text-max-[40px]">
+          summary={`<div className="text-screen-[300px]/lg">`}
+        >{`<div className="text-screen-[300px]/lg">
+  <h2 className="text-scale-xs/[40px]">
     Text
   </h2>
 </div>`}</CodeBlock>

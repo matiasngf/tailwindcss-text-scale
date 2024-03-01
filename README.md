@@ -41,10 +41,10 @@ export default {
 
 ## Scaling text
 
-`text-min-[size]` and `text-max-[size]` will scale your font-size between the two breakpoints.
+`text-scale-[min-size]/[max-size]` will scale your font-size between the two breakpoints default breakpoints.
 
 ```html
-<h2 className="text-min-lg text-max-4xl">
+<h2 className="text-scale-lg/4xl">
   Scaled text
 </h2>
 ```
@@ -52,7 +52,7 @@ export default {
 You can use any font-size you want:
 
 ```html
-<h2 className="text-min-[13px] text-max-[20px]">
+<h2 className="text-scale-[13px]/[20px]">
   Scaled text
 </h2>
 ```
@@ -61,11 +61,11 @@ To scale the text correclty you should use pixels or rems only.
 
 ## Breakpoints
 
-if you need to set a custom breakpoint for a component, you can use the `text-screen-min-[size]` and `text-screen-max-[size]` classes.
+If you need to set a custom breakpoint for a component, you can use the `text-screen-[min-size]/[max-size]` classes.
 
 ```html
-<div className="text-screen-min-[300px] text-screen-max-lg">
-  <h2 className="text-min-xs text-max-[40px]">
+<div className="text-screen-[300px]/lg">
+  <h2 className="text-scale-xs/[40px]">
     Scale this text between 300px and screen-lg.
   </h2>
 </div>
@@ -86,26 +86,42 @@ textScalePlugin({
 
 ### Custom classNames
 
-If you don't like using `text-min-[size]`, you can customize the variable name on the plugin configuration. For example, if you want your classes to be `scale-text-min-[size]`, you can set:
+If you don't like using `text-[size]/[size]`, you can customize the variable name on the plugin configuration. For example, if you want your classes to be `scaled-text-[size]/[size]`, you can set:
 
 ```tsx
 textScalePlugin({
-  prefix: 'scale-text',
+  textScalePrefix: 'scaled-text',
 })
 ```
 
 Now, to scale your text, use:
 
 ```html
-<h2 className="scale-text-min-xs scale-text-max-lg">
+<h2 className="scaled-text-xs/lg">
   Scaled!
 </h2>
 ```
 
-And to customize breakpoints:
+Optinally, you can set the `screenScalePrefix` to change the `text-screen-[size]/[size]` classes.
+
+```tsx
+textScalePlugin({
+  screenScalePrefix: 'scaled-screen',
+})
+```
 
 ```html
-<div className="scale-text-screen-min-sm scale-text-screen-max-xl">
+<div className="scaled-screen-sm/xl">
   {...content}
 </div>
+```
+
+### Clamp
+
+Clamp limits how much your font will scale. By default, the plugin will clamp the font-size to the min and max values. You can disable this behavior by setting `clamp` to `false`:
+
+```tsx
+textScalePlugin({
+  clamp: false,
+})
 ```

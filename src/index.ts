@@ -5,18 +5,24 @@ export interface TextScalePluginOptions {
   minScreen?: number;
   /** Custom maximum screen width */
   maxScreen?: number;
-  /** Custom prefix for the generated classes */
-  prefix?: string;
+  /** Custom prefix for the generated text classes */
+  textScalePrefix?: string;
+  /** Custom prefix for the generated screen classes */
+  screenScalePrefix?: string;
   /** Custom prefix for the generated CSS variables */
   varsPrefix?: string;
+  /** Enable or disable clamping */
+  clamp?: boolean
 }
 
 const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
   ({
     minScreen: minScreenOption,
     maxScreen: maxScreenOption,
-    prefix = 'text',
+    textScalePrefix = 'text-scale',
+    screenScalePrefix = 'text-screen',
     varsPrefix = 'text-scale',
+    clamp = true
   } = {}) => ({ addBase, matchUtilities, theme }) => {
 
     const [minScreen, maxScreen] = [
@@ -42,9 +48,9 @@ Add one or edit your plugin config:
     });
 
 
-    const baseMatcher = `[class*="${prefix}-min"][class*="${prefix}-max"]`
+    const fontScaleMatcher = `[class*="${textScalePrefix}-"]`
 
-    const screenMatcher = `:root, [class*="${prefix}-screen-min"], [class*="${prefix}-screen-max"]`
+    const screenMatcher = `:root, [class*="${screenScalePrefix}-"]`
 
     addBase({
       ":root": {
@@ -61,7 +67,7 @@ Add one or edit your plugin config:
           var(--${varsPrefix}-offset) / var(--${varsPrefix}-screen-difference) * 16
         )`,
       },
-      [baseMatcher]: {
+      [fontScaleMatcher]: {
         [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,
         [`--${varsPrefix}-max-rem`]: `calc(var(--${varsPrefix}-max) * 1rem)`,
         [`--${varsPrefix}-current-rem`]: `calc(
@@ -69,57 +75,48 @@ Add one or edit your plugin config:
           var(--${varsPrefix}-min)) +
           var(--${varsPrefix}-min-rem)
         )`,
-        'font-size': `clamp(
+        'font-size': clamp ? `clamp(
           var(--${varsPrefix}-min-rem),
           var(--${varsPrefix}-current-rem),
           var(--${varsPrefix}-max-rem)
-        )`
+        )` : `var(--${varsPrefix}-current-rem)`
       }
     })
 
     const fontSizes = theme('fontSize');
     const screens = theme('screens');
 
-    matchUtilities(
-      {
-        [`${prefix}-min`]: (value) => {
-          const clampedUnit = unitToRem(value);
-          return {
-            [`--${varsPrefix}-min`]: clampedUnit,
-          };
-        },
-        [`${prefix}-max`]: (value) => {
-          const clampedUnit = unitToRem(value);
-          return {
-            [`--${varsPrefix}-max`]: clampedUnit,
-          };
-        },
-      },
-      {
-        values: fontSizes,
-      }
-    )
+    matchUtilities({
+      [`${textScalePrefix}`]: (value, { modifier }) => {
+        if (modifier === null) return {}
+        const clampedUnitMin = unitToRem(value);
+        const clampedUnitMax = unitToRem(modifier);
 
-    matchUtilities(
-      {
-        [`${prefix}-screen-min`]: (value) => {
-          const parsedUnit = parseScreenSize(value);
-          return {
-            [`--${varsPrefix}-screen-min`]: parsedUnit,
-          };
-        },
-        [`${prefix}-screen-max`]: (value) => {
-          const parsedUnit = parseScreenSize(value);
-          return {
-            [`--${varsPrefix}-screen-max`]: parsedUnit,
-          };
-        },
-      },
-      {
-        values: screens,
+        return {
+          [`--${varsPrefix}-min`]: clampedUnitMin,
+          [`--${varsPrefix}-max`]: clampedUnitMax,
+        }
       }
-    )
+    }, {
+      values: fontSizes,
+      modifiers: fontSizes
+    })
 
+    matchUtilities({
+      [`${screenScalePrefix}`]: (value, { modifier }) => {
+        if (modifier === null) return {}
+        const clampedUnitMin = parseScreenSize(value);
+        const clampedUnitMax = parseScreenSize(modifier);
+
+        return {
+          [`--${varsPrefix}-screen-min`]: clampedUnitMin,
+          [`--${varsPrefix}-screen-max`]: clampedUnitMax,
+        }
+      }
+    }, {
+      values: screens,
+      modifiers: screens
+    })
   }
 )
 
