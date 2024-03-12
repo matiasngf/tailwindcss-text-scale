@@ -26,10 +26,13 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
   } = {}) => ({ addBase, matchUtilities, theme }) => {
 
     const [minScreen, maxScreen] = [
-      typeof minScreenOption === 'number' ? minScreenOption : theme('screens.sm') as string | null,
-      typeof maxScreenOption === 'number' ? maxScreenOption : theme('screens.2xl') as string | null
+      typeof minScreenOption === 'number' ? minScreenOption : theme('screens.sm') as number | string | null,
+      typeof maxScreenOption === 'number' ? maxScreenOption : theme('screens.2xl') as number | string | null
     ].map((screen, i) => {
-      if (screen && typeof screen === 'string' && screen.includes('px')) {
+      if (typeof screen === 'number') {
+        return screen;
+      }
+      if (typeof screen === 'string' && screen.includes('px')) {
         return parseInt(screen.replace('px', ''))
       } else {
         const valueToSet = i === 0 ? 'screens.sm' : 'screens.2xl';
