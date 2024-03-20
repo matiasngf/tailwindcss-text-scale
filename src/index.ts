@@ -50,17 +50,10 @@ Add one or edit your plugin config:
       }
     });
 
-
-    const fontScaleMatcher = `[class*="${textScalePrefix}-"]`
-
-    const screenMatcher = `:root, [class*="${screenScalePrefix}-"]`
-
     addBase({
       ":root": {
         [`--${varsPrefix}-screen-max`]: maxScreen.toString(),
         [`--${varsPrefix}-screen-min`]: minScreen.toString(),
-      },
-      [screenMatcher]: {
         [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
         [`--${varsPrefix}-screen-difference`]: `calc(
           var(--${varsPrefix}-screen-max) - var(--${varsPrefix}-screen-min)
@@ -70,20 +63,6 @@ Add one or edit your plugin config:
           var(--${varsPrefix}-offset) / var(--${varsPrefix}-screen-difference) * 16
         )`,
       },
-      [fontScaleMatcher]: {
-        [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,
-        [`--${varsPrefix}-max-rem`]: `calc(var(--${varsPrefix}-max) * 1rem)`,
-        [`--${varsPrefix}-current-rem`]: `calc(
-          var(--${varsPrefix}-percentage) * (var(--${varsPrefix}-max) -
-          var(--${varsPrefix}-min)) +
-          var(--${varsPrefix}-min-rem)
-        )`,
-        'font-size': clamp ? `clamp(
-          var(--${varsPrefix}-min-rem),
-          var(--${varsPrefix}-current-rem),
-          var(--${varsPrefix}-max-rem)
-        )` : `var(--${varsPrefix}-current-rem)`
-      }
     })
 
     const fontSizes = theme('fontSize');
@@ -96,13 +75,25 @@ Add one or edit your plugin config:
         const clampedUnitMax = unitToRem(modifier);
 
         return {
+          'font-size': Boolean(clamp) ? `clamp(
+            var(--${varsPrefix}-min-rem),
+            var(--${varsPrefix}-current-rem),
+            var(--${varsPrefix}-max-rem)
+          )` : `var(--${varsPrefix}-current-rem)`,
           [`--${varsPrefix}-min`]: clampedUnitMin,
           [`--${varsPrefix}-max`]: clampedUnitMax,
-        }
+          [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,
+          [`--${varsPrefix}-max-rem`]: `calc(var(--${varsPrefix}-max) * 1rem)`,
+          [`--${varsPrefix}-current-rem`]: `calc(
+            var(--${varsPrefix}-percentage) * (var(--${varsPrefix}-max) -
+            var(--${varsPrefix}-min)) +
+            var(--${varsPrefix}-min-rem)
+          )`,
+        } as Record<string, string>;
       }
     }, {
       values: fontSizes,
-      modifiers: fontSizes
+      modifiers: fontSizes,
     })
 
     matchUtilities({
@@ -114,6 +105,14 @@ Add one or edit your plugin config:
         return {
           [`--${varsPrefix}-screen-min`]: clampedUnitMin,
           [`--${varsPrefix}-screen-max`]: clampedUnitMax,
+          [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
+          [`--${varsPrefix}-screen-difference`]: `calc(
+            var(--${varsPrefix}-screen-max) - var(--${varsPrefix}-screen-min)
+          )`,
+          /* *16 because clamp-percentage is in px and fontSize is in rem */
+          [`--${varsPrefix}-percentage`]: `calc(
+            var(--${varsPrefix}-offset) / var(--${varsPrefix}-screen-difference) * 16
+          )`,
         }
       }
     }, {
