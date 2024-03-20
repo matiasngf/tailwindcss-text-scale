@@ -11,8 +11,40 @@ export interface TextScalePluginOptions {
   screenScalePrefix?: string;
   /** Custom prefix for the generated CSS variables */
   varsPrefix?: string;
-  /** Enable or disable clamping */
-  clamp?: boolean
+  /** Enable or disable clamping for the min breakpoint */
+  clampMin?: boolean
+  /** Enable or disable clamping for the max breakpoint */
+  clampMax?: boolean
+}
+
+const getFontSize = (varsPrefix: string, clampMin: boolean, clampMax: boolean) => {
+  if (!clampMin && !clampMax) {
+    return `var(--${varsPrefix}-current-rem)`
+  }
+
+  if (clampMin && clampMax) {
+    return `clamp(
+      var(--${varsPrefix}-min-rem),
+      var(--${varsPrefix}-current-rem),
+      var(--${varsPrefix}-max-rem)
+    )`
+  }
+
+  if (clampMin) {
+    return `max(
+      var(--${varsPrefix}-min-rem),
+      var(--${varsPrefix}-current-rem)
+    )`
+  }
+
+  if (clampMax) {
+    return `min(
+      var(--${varsPrefix}-max-rem),
+      var(--${varsPrefix}-current-rem)
+    )`
+  }
+
+  return `var(--${varsPrefix}-current-rem)`
 }
 
 const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
@@ -22,7 +54,8 @@ const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
     textScalePrefix = 'text-scale',
     screenScalePrefix = 'text-screen',
     varsPrefix = 'text-scale',
-    clamp = true
+    clampMin = true,
+    clampMax = true
   } = {}) => ({ addBase, matchUtilities, theme }) => {
 
     const [minScreen, maxScreen] = [
@@ -75,11 +108,7 @@ Add one or edit your plugin config:
         const clampedUnitMax = unitToRem(modifier);
 
         return {
-          'font-size': Boolean(clamp) ? `clamp(
-            var(--${varsPrefix}-min-rem),
-            var(--${varsPrefix}-current-rem),
-            var(--${varsPrefix}-max-rem)
-          )` : `var(--${varsPrefix}-current-rem)`,
+          'font-size': getFontSize(varsPrefix, clampMin, clampMax),
           [`--${varsPrefix}-min`]: clampedUnitMin,
           [`--${varsPrefix}-max`]: clampedUnitMax,
           [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,

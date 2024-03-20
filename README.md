@@ -118,10 +118,11 @@ textScalePlugin({
 
 ### Clamp
 
-Clamp limits how much your font will scale. By default, the plugin will clamp the font-size to the min and max values. You can disable this behavior by setting `clamp` to `false`:
+Clamp limits how much your font will scale. By default, the plugin will clamp the font-size to the min and max values. You can disable this behavior by setting `clampMin` or `clampMax` to `false`:
 
 ```tsx
 textScalePlugin({
-  clamp: false,
+  clampMin: false,
+  clampMax: false,
 })
 ```
