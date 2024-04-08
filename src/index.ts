@@ -47,31 +47,30 @@ const getFontSize = (varsPrefix: string, clampMin: boolean, clampMax: boolean) =
   return `var(--${varsPrefix}-current-rem)`
 }
 
-const textScalePlugin = plugin.withOptions<TextScalePluginOptions>(
-  ({
-    minScreen: minScreenOption,
-    maxScreen: maxScreenOption,
-    textScalePrefix = 'text-scale',
-    screenScalePrefix = 'text-screen',
-    varsPrefix = 'text-scale',
-    clampMin = true,
-    clampMax = true
-  } = {}) => ({ addBase, matchUtilities, theme }) => {
+const textScalePlugin = ({
+  minScreen: minScreenOption,
+  maxScreen: maxScreenOption,
+  textScalePrefix = 'text-scale',
+  screenScalePrefix = 'text-screen',
+  varsPrefix = 'text-scale',
+  clampMin = true,
+  clampMax = true
+}: TextScalePluginOptions = {}) => plugin(({ addBase, matchUtilities, theme }) => {
 
-    const [minScreen, maxScreen] = [
-      typeof minScreenOption === 'number' ? minScreenOption : theme('screens.sm') as number | string | null,
-      typeof maxScreenOption === 'number' ? maxScreenOption : theme('screens.2xl') as number | string | null
-    ].map((screen, i) => {
-      if (typeof screen === 'number') {
-        return screen;
-      }
-      if (typeof screen === 'string' && screen.includes('px')) {
-        return parseInt(screen.replace('px', ''))
-      } else {
-        const valueToSet = i === 0 ? 'screens.sm' : 'screens.2xl';
-        const optionToSet = i === 0 ? 'minScreen' : 'maxScreen';
+  const [minScreen, maxScreen] = [
+    typeof minScreenOption === 'number' ? minScreenOption : theme('screens.sm') as number | string | null,
+    typeof maxScreenOption === 'number' ? maxScreenOption : theme('screens.2xl') as number | string | null
+  ].map((screen, i) => {
+    if (typeof screen === 'number') {
+      return screen;
+    }
+    if (typeof screen === 'string' && screen.includes('px')) {
+      return parseInt(screen.replace('px', ''))
+    } else {
+      const valueToSet = i === 0 ? 'screens.sm' : 'screens.2xl';
+      const optionToSet = i === 0 ? 'minScreen' : 'maxScreen';
 
-        const errorMessage = `
+      const errorMessage = `
 tailwindcss-text-scale error:
 You don't have  a value for ${valueToSet} in your tailwind theme.
 Add one or edit your plugin config:
@@ -79,76 +78,76 @@ Add one or edit your plugin config:
     ${optionToSet}: number
   })
 `
-        throw new Error(errorMessage);
-      }
-    });
+      throw new Error(errorMessage);
+    }
+  });
 
-    addBase({
-      ":root": {
-        [`--${varsPrefix}-screen-max`]: maxScreen.toString(),
-        [`--${varsPrefix}-screen-min`]: minScreen.toString(),
-        [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
-        [`--${varsPrefix}-screen-difference`]: `calc(
+  addBase({
+    ":root": {
+      [`--${varsPrefix}-screen-max`]: maxScreen.toString(),
+      [`--${varsPrefix}-screen-min`]: minScreen.toString(),
+      [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
+      [`--${varsPrefix}-screen-difference`]: `calc(
           var(--${varsPrefix}-screen-max) - var(--${varsPrefix}-screen-min)
         )`,
-        /* *16 because clamp-percentage is in px and fontSize is in rem */
-        [`--${varsPrefix}-percentage`]: `calc(
+      /* *16 because clamp-percentage is in px and fontSize is in rem */
+      [`--${varsPrefix}-percentage`]: `calc(
           var(--${varsPrefix}-offset) / var(--${varsPrefix}-screen-difference) * 16
         )`,
-      },
-    })
+    },
+  })
 
-    const fontSizes = theme('fontSize');
-    const screens = theme('screens');
+  const fontSizes = theme('fontSize');
+  const screens = theme('screens');
 
-    matchUtilities({
-      [`${textScalePrefix}`]: (value, { modifier }) => {
-        if (modifier === null) return {}
-        const clampedUnitMin = unitToRem(value);
-        const clampedUnitMax = unitToRem(modifier);
+  matchUtilities({
+    [`${textScalePrefix}`]: (value, { modifier }) => {
+      if (modifier === null) return {}
+      const clampedUnitMin = unitToRem(value);
+      const clampedUnitMax = unitToRem(modifier);
 
-        return {
-          'font-size': getFontSize(varsPrefix, clampMin, clampMax),
-          [`--${varsPrefix}-min`]: clampedUnitMin,
-          [`--${varsPrefix}-max`]: clampedUnitMax,
-          [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,
-          [`--${varsPrefix}-max-rem`]: `calc(var(--${varsPrefix}-max) * 1rem)`,
-          [`--${varsPrefix}-current-rem`]: `calc(
+      return {
+        'font-size': getFontSize(varsPrefix, clampMin, clampMax),
+        [`--${varsPrefix}-min`]: clampedUnitMin,
+        [`--${varsPrefix}-max`]: clampedUnitMax,
+        [`--${varsPrefix}-min-rem`]: `calc(var(--${varsPrefix}-min) * 1rem)`,
+        [`--${varsPrefix}-max-rem`]: `calc(var(--${varsPrefix}-max) * 1rem)`,
+        [`--${varsPrefix}-current-rem`]: `calc(
             var(--${varsPrefix}-percentage) * (var(--${varsPrefix}-max) -
             var(--${varsPrefix}-min)) +
             var(--${varsPrefix}-min-rem)
           )`,
-        } as Record<string, string>;
-      }
-    }, {
-      values: fontSizes,
-      modifiers: fontSizes,
-    })
+      } as Record<string, string>;
+    }
+  }, {
+    values: fontSizes,
+    modifiers: fontSizes,
+  })
 
-    matchUtilities({
-      [`${screenScalePrefix}`]: (value, { modifier }) => {
-        if (modifier === null) return {}
-        const clampedUnitMin = parseScreenSize(value);
-        const clampedUnitMax = parseScreenSize(modifier);
+  matchUtilities({
+    [`${screenScalePrefix}`]: (value, { modifier }) => {
+      if (modifier === null) return {}
+      const clampedUnitMin = parseScreenSize(value);
+      const clampedUnitMax = parseScreenSize(modifier);
 
-        return {
-          [`--${varsPrefix}-screen-min`]: clampedUnitMin,
-          [`--${varsPrefix}-screen-max`]: clampedUnitMax,
-          [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
-          [`--${varsPrefix}-screen-difference`]: `calc(
+      return {
+        [`--${varsPrefix}-screen-min`]: clampedUnitMin,
+        [`--${varsPrefix}-screen-max`]: clampedUnitMax,
+        [`--${varsPrefix}-offset`]: `calc(100vw - var(--${varsPrefix}-screen-min) * 1px)`,
+        [`--${varsPrefix}-screen-difference`]: `calc(
             var(--${varsPrefix}-screen-max) - var(--${varsPrefix}-screen-min)
           )`,
-          /* *16 because clamp-percentage is in px and fontSize is in rem */
-          [`--${varsPrefix}-percentage`]: `calc(
+        /* *16 because clamp-percentage is in px and fontSize is in rem */
+        [`--${varsPrefix}-percentage`]: `calc(
             var(--${varsPrefix}-offset) / var(--${varsPrefix}-screen-difference) * 16
           )`,
-        }
       }
-    }, {
-      values: screens,
-      modifiers: screens
-    })
-  }
+    }
+  }, {
+    values: screens,
+    modifiers: screens
+  })
+}
 )
 
 /** Utils */
